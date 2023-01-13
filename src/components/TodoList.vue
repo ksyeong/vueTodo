@@ -7,9 +7,12 @@
         </div>
         <div class="subContainer">
             <ul>
-                <li v-for="todoList in propsdata" v-bind:key="todoList.item" class="shadow">{{ todoList.item }}</li>
+                <li v-for="(todoList ,index) in propsdata" v-bind:key="todoList.item" class="shadow">{{ todoList.item }}
+                <button v-on:click="removeTodo(todoList, index)" class="removeBtn">⌫</button>
+                </li>
             </ul>
         </div>
+        
     </div>
 </template>
 
@@ -20,14 +23,17 @@ export default {
             return {
                 todoText: "",
                 todoLists: []
-        }
+            }
     },
     methods:{
         addTodo: function(){
-            let obj = {complated: false , item: this.todoText}
-            localStorage.setItem(this.todoText, JSON.stringify(obj));
-            this.$emit("addTodoItem",this.todoText)
-            this.todoText = "";
+            if(this.todoText !== ""){
+                this.$emit("addTodoItem",this.todoText)
+                this.todoText = "";
+            }
+        },
+        removeTodo: function(todoItem,index){
+            this.$emit("removeItem",todoItem,index)
         }
     }
 }
@@ -36,7 +42,7 @@ export default {
 <style scoped>
 .container{
     margin: 0 auto;
-    height: 100vh;
+    height: fit-content;
     width: 80vw;
     text-align: center;
 }
@@ -68,6 +74,7 @@ ul{
     padding: 0;
 }
 li{
+    display: flex;
     width: 500px;
     line-height: 50px;
     min-height: 50px;
@@ -75,6 +82,13 @@ li{
     background-color: white;
     margin: .9rem auto;
     border-radius: 5px;
+    padding: 0 .9em;
+    box-sizing: border-box;
+}
+.removeBtn{
+    margin-left: auto;
+    color: red;
+    font-size: 24px;
 }
 /* common */
 .shadow{
@@ -82,12 +96,12 @@ li{
 }
 .subContainer{
     width: 500px;
-    height: 50px;
     margin: 0 auto;
 }
 button{
     border: none;
     background-color: transparent;
+    cursor: pointer;
 }
 
 </style>
