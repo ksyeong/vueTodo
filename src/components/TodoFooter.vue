@@ -1,6 +1,6 @@
 <template>
     <div>
-        <button class="allRemoveBtn" v-on:click="allRemoveTodo">모두지우기</button>
+        <button class="allRemoveBtn shadow" v-on:click="allRemoveTodo">모두지우기</button>
     </div>
 </template>
 
@@ -25,5 +25,7 @@ div{
     color: red;
     font-size: 20px;
     line-height: 2;
+    border: none;
+    border-radius: 5px;
 }
 </style>

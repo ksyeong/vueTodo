@@ -2,27 +2,36 @@
     <div class="container">
         <h1>Todo List</h1>
         <div class="subContainer shadow inputWrap">
-            <input type="text" v-model="todoText" v-on:keyup.enter="addTodo">
+            <input type="text" v-model="todoText" v-on:keyup.enter="addTodo" class="shadow">
             <button v-on:click="addTodo" class="inputBtn">+</button>
         </div>
         <div class="subContainer">
-            <ul>
+            <transition-group name="list" tag="ul">
                 <li v-for="(todoList ,index) in propsdata" v-bind:key="todoList.item" class="shadow">{{ todoList.item }}
                 <button v-on:click="removeTodo(todoList, index)" class="removeBtn">⌫</button>
                 </li>
-            </ul>
+            </transition-group>
         </div>
-        
+        <Modal v-if="showModal" @close="showModal = false">
+        <h3 slot="header">경고!
+            <button class="closeModalBtn" @click="showModal = false">x</button>
+        </h3>
+        <p slot="body">내용이 입력되지 않았습니다.</p>
+        </Modal>
     </div>
+
+    
 </template>
 
 <script>
+import Modal from "./co/AlertModal.vue"
 export default {
     props:["propsdata"],
     data: function(){
             return {
                 todoText: "",
-                todoLists: []
+                todoLists: [],
+                showModal:false
             }
     },
     methods:{
@@ -30,11 +39,16 @@ export default {
             if(this.todoText !== ""){
                 this.$emit("addTodoItem",this.todoText)
                 this.todoText = "";
+            }else{
+                this.showModal = !this.showModal;
             }
         },
         removeTodo: function(todoItem,index){
             this.$emit("removeItem",todoItem,index)
         }
+    },
+    components:{
+        Modal : Modal
     }
 }
 </script>
@@ -58,6 +72,7 @@ input{
     line-height: 50px;
     border: none;
     font-size: 1.2em;
+    padding: 0;
 }
 input:focus{
     outline: none;
@@ -91,9 +106,6 @@ li{
     font-size: 24px;
 }
 /* common */
-.shadow{
-    box-shadow: 10px 10px 50px rgba(0, 0, 0, 0.03);
-}
 .subContainer{
     width: 500px;
     margin: 0 auto;
@@ -103,5 +115,19 @@ button{
     background-color: transparent;
     cursor: pointer;
 }
-
+.closeModalBtn{
+    color: #42b983;
+    font-weight: bold;
+    font-size: 20px;
+    text-align: center;
+    line-height: 42px;
+}
+/* 리스트 트렌지션 효과 */
+.list-enter-active, .list-leave-active {
+  transition: all 1s;
+}
+.list-enter, .list-leave-to /* .list-leave-active below version 2.1.8 */ {
+  opacity: 0;
+  transform: translateY(30px);
+}
 </style>

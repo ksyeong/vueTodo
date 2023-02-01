@@ -49,4 +49,7 @@ export default {
 body{
   background-color: rgb(255, 247, 238);
 }
+.shadow{
+  box-shadow: 2px 1px 3px rgba(0,0,0,0.3);
+}
 </style>
